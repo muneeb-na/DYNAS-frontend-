@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complain Page</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <style>
+    /* Global Styles */
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4895ef;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --success-color: #4bb543;
+      --error-color: #ff3333;
+      --warning-color: #ffc107;
+      --border-radius: 10px;
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: var(--dark-color);
+      line-height: 1.6;
+    }
+    
+    /* Main Container */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      position: relative;
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Header Section */
+    .header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      left: -50px;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+    
+    #welcome {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    #student-info {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Divider */
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+      margin: 25px 0;
+    }
+    
+    /* Complaint Form */
+    .complaint-form {
+      padding: 30px;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      color: var(--dark-color);
+      position: relative;
+      display: inline-block;
+    }
+    
+    h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--accent-color);
+      border-radius: 3px;
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+    }
+    
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #000000;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      transition: var(--transition);
+      background-color: #f8f9fa;
+    }
+    
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+    }
+    
+    input::placeholder, textarea::placeholder {
+      color: #adb5bd;
+    }
+    
+    /* Button */
+    button {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 15px 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 20px rgba(67, 97, 238, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    /* Status Message */
+    #status-msg {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: var(--border-radius);
+      font-size: 14px;
+      display: none;
+    }
+    
+    .success {
+      background-color: rgba(75, 181, 67, 0.1);
+      color: var(--success-color);
+      border: 1px solid var(--success-color);
+      display: block;
+    }
+    
+    .error {
+      background-color: rgba(255, 51, 51, 0.1);
+      color: var(--error-color);
+      border: 1px solid var(--error-color);
+      display: block;
+    }
+    
+    .warning {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: var(--warning-color);
+      border: 1px solid var(--warning-color);
+      display: block;
+    }
+    
+    /* Email Popup */
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        padding: 25px 20px;
+      }
+      
+      #welcome {
+        font-size: 1.8rem;
+      }
+      
+      .complaint-form {
+        padding: 25px 20px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 20px 10px;
+      }
+      
+      #welcome {
+        font-size: 1.5rem;
+      }
+      
+      button {
+        width: 100%;
+      }
+    }
+    
+    /* Floating Animation */
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    /* Decorative Elements */
+    .corner-decoration {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 15px solid rgba(72, 149, 239, 0.1);
+      border-radius: 50%;
+    }
+    
+    .corner-1 {
+      top: -50px;
+      right: -50px;
+      border-color: transparent transparent transparent rgba(72, 149, 239, 0.1);
+    }
+    
+    .corner-2 {
+      bottom: -50px;
+      left: -50px;
+      border-color: rgba(72, 149, 239, 0.1) transparent transparent transparent;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="corner-decoration corner-1"></div>
+    <div class="corner-decoration corner-2"></div>
+    
+    <div class="header floating">
+      <h2 id="welcome">welcome</h2>
+      <p id="student-info"></p>
+    </div>
+    
+    <div class="complaint-form">
+      <h3>Submit a Complaint</h3>
+      <p>Please write your complaint below. you have all rights to complain</p>
+      <div class="form-group">
+        <textarea id="complaintText" placeholder="Write your complaint here..." required></textarea>
+      </div>
+      
+      <button onclick="submitComplaint()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+          <path d="M22 2L11 13"></path>
+          <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+        </svg>
+        Submit Complaint
+      </button>
+      
+      <p id="status-msg"></p>
+    </div>
+  </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    addDoc,
+    collection,
+    setDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import {
+    getMessaging,
+    getToken,
+    onMessage
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCUZzR0QhKFu3Ne3yTJU2RPX_RZaYPsNns",
+    authDomain: "dynas-final.firebaseapp.com",
+    projectId: "dynas-final",
+    storageBucket: "dynas-final.firebasestorage.app",
+    messagingSenderId: "448429408169",
+    appId: "1:448429408169:web:9237f956dfedacea3dceb8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const messaging = getMessaging(app);
+
+  // Complaint Submission
+  window.submitComplaint = async function () {
+    const complaint = document.getElementById("complaintText").value;
+    const user = auth.currentUser;
+    if (!user) return alert("Not logged in");
+
+    const userSnap = await getDoc(doc(db, "users", user.uid));
+    const userData = userSnap.data();
+
+    await addDoc(collection(db, "complaints"), {
+      uid: user.uid,
+      name: userData.name,
+      class: userData.class,
+      complaint: complaint,
+      timestamp: Date.now()
+    });
+
+    alert("Complaint submitted to mangement successfully! if your complain is about big issue you might be call in office."); 
+    document.getElementById("complaintText").value = "";
+  };
+
+  // Display user info
+  const info = document.getElementById("student-info");
+  const storeinfo = localStorage.getItem("studentName") || "you are not logged in";
+  const storeclass = localStorage.getItem("studentClass") || "you are not logged in";
+  info.innerText = `Name: ${storeinfo}, Class: ${storeclass}`;
+
+
+  
+
+</script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Login</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <style>
+    /* Global Styles */
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4895ef;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --success-color: #4bb543;
+      --error-color: #ff3333;
+      --border-radius: 8px;
+      --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow: hidden;
+      transition: filter 0.3s ease;
+    }
+    
+    /* Blur effect for background when popup is visible */
+    body.blurred {
+      filter: blur(5px);
+    }
+    
+    /* Login Container */
+    .login-container {
+      background-color: white;
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transform: translateY(-20px);
+      opacity: 0;
+      animation: fadeInUp 0.5s ease forwards;
+      position: relative;
+      overflow: hidden;
+      transition: filter 0.3s ease;
+    }
+    
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Header */
+    h2 {
+      color: var(--dark-color);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      border-radius: 3px;
+    }
+    
+    /* Form Elements */
+    .input-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+    
+    input {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #000000;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      transition: var(--transition);
+      background-color: #f8f9fa;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+    }
+    
+    input::placeholder {
+      color: #adb5bd;
+    }
+    
+    /* Button */
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    button:hover {
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    /* Result Message */
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: var(--border-radius);
+      text-align: center;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .success {
+      background-color: rgba(75, 181, 67, 0.1);
+      color: var(--success-color);
+      border: 1px solid var(--success-color);
+      display: block;
+    }
+    
+    .error {
+      background-color: rgba(255, 51, 51, 0.1);
+      color: var(--error-color);
+      border: 1px solid var(--error-color);
+      display: block;
+    }
+    
+    /* Responsive */
+    @media (max-width: 576px) {
+      .login-container {
+        padding: 30px 20px;
+      }
+      
+      h2 {
+        font-size: 24px;
+      }
+      
+      input, button {
+        padding: 12px 15px;
+      }
+    }
+    
+    /* Floating Labels Effect */
+    .floating-label {
+      position: relative;
+    }
+    
+    .floating-label label {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      color: #adb5bd;
+      transition: var(--transition);
+      pointer-events: none;
+      background-color: #f8f9fa;
+      padding: 0 5px;
+    }
+    
+    .floating-label input:focus + label,
+    .floating-label input:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 15px;
+      font-size: 12px;
+      color: var(--accent-color);
+      background-color: white;
+    }
+    
+    /* Additional Decorative Elements */
+    .decoration {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(72, 149, 239, 0.1) 0%, rgba(72, 149, 239, 0) 70%);
+      z-index: -1;
+    }
+    
+    .decoration-1 {
+      top: -50px;
+      right: -50px;
+    }
+    
+    .decoration-2 {
+      bottom: -30px;
+      left: -30px;
+      width: 150px;
+      height: 150px;
+    }
+    
+    /* Spinner Popup Styles */
+    #loadingPopup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    #loadingPopup.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .popup-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      z-index: -1;
+    }
+    
+    .spinner-container {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    
+    #loadingPopup.visible .spinner-container {
+      transform: translateY(0);
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(67, 97, 238, 0.2);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .spinner-text {
+      font-size: 18px;
+      color: var(--dark-color);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="decoration decoration-1"></div>
+  <div class="decoration decoration-2"></div>
+  
+  <div class="login-container">
+    <h2>Student Login</h2>
+    
+    <div class="input-group floating-label">
+      <input type="email" id="email" placeholder=" " required>
+      <label for="email">Email</label>
+    </div>
+    
+    <div class="input-group floating-label">
+      <input type="password" id="password" placeholder=" " required>
+      <label for="password">Password</label>
+    </div>
+    
+    <button onclick="loginUser()">Login</button>
+    
+    <div id="result"></div>
+  </div>
+  
+  <!-- Loading Popup -->
+  <div id="loadingPopup">
+    <div class="popup-background"></div>
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <div class="spinner-text">Logging in...</div>
+    </div>
+  </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      addDoc,
+      collection
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCUZzR0QhKFu3Ne3yTJU2RPX_RZaYPsNns",
+      authDomain: "dynas-final.firebaseapp.com",
+      projectId: "dynas-final",
+      storageBucket: "dynas-final.firebasestorage.app",
+      messagingSenderId: "448429408169",
+      appId: "1:448429408169:web:9237f956dfedacea3dceb8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Get the loading popup element
+    const loadingPopup = document.getElementById('loadingPopup');
+    
+    // Function to show the loading spinner
+    function showLoadingSpinner() {
+      document.body.classList.add('blurred');
+      loadingPopup.classList.add('visible');
+    }
+    
+    // Function to hide the loading spinner
+    function hideLoadingSpinner() {
+      document.body.classList.remove('blurred');
+      loadingPopup.classList.remove('visible');
+    }
+
+    window.loginUser = async function () {
+      // Show the loading spinner
+      showLoadingSpinner();
+      
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      
+      try {
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        const uid = userCred.user.uid;
+        console.log("User logged in, UID:", uid);
+
+        // Fetch user data from Firestore
+        const userDocRef = doc(db, "users", uid);
+        const userSnap = await getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          console.log("User data found:", userData);
+          localStorage.setItem("studentName", userData.name || "");
+          localStorage.setItem("studentClass", userData.class || "");
+          console.log("Saved to localStorage:", {
+            name: localStorage.getItem("studentName"),
+            class: localStorage.getItem("studentClass")
+          });
+        } else {
+          console.warn("No user document found for UID:", uid);
+          localStorage.setItem("studentName", "");
+          localStorage.setItem("studentClass", "");
+        }
+
+        window.location.href = "complain.html";
+      } catch (error) {
+        // Hide the loading spinner on error
+        hideLoadingSpinner();
+        alert("Login failed: " + error.message);
+      }
+    };
+
+  </script>
+</body>
+</html>
