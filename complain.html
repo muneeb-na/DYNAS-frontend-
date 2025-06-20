@@ -397,7 +397,7 @@
   info.innerText = `Name: ${storeinfo}, Class: ${storeclass}`;
 
 
-   windows.loadAnnouncement = async function () {
+   window.loadAnnouncement = async function () {
     const docRef = doc(db, "announcements", "latest");
     const snap = await getDoc(docRef);
 
