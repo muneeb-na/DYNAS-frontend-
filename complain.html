@@ -316,6 +316,19 @@
         </svg>
         Submit Complaint
       </button>
+
+<section style="
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+">
+  <h3 style="color: #4361ee;"><i class="fas fa-bullhorn"></i> Announcement</h3>
+  <p id="announcement-text-display" style="margin-top: 10px; font-size: 16px;"></p>
+  <p id="announcement-date-display" style="color: gray; font-size: 13px;"></p>
+</section>
+
       
       <p id="status-msg"></p>
     </div>
@@ -384,7 +397,20 @@
   info.innerText = `Name: ${storeinfo}, Class: ${storeclass}`;
 
 
-  
+   windows.loadAnnouncement = async function () {
+    const docRef = doc(db, "announcements", "latest");
+    const snap = await getDoc(docRef);
+
+    if (snap.exists()) {
+      const data = snap.data();
+      document.getElementById("announcement-text-display").textContent = data.text;
+      document.getElementById("announcement-date-display").textContent = `Posted on: ${data.date}`;
+    } else {
+      document.getElementById("announcement-text-display").textContent = "No announcement posted yet.";
+    }
+  }
+
+  loadAnnouncement();
 
 </script>
 </body>
