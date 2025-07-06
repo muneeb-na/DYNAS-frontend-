@@ -210,7 +210,6 @@
             margin-bottom: 1rem;
             position: relative;
             display: inline-block;
-            dispaly : none;
         }
 
         .stat-number::after {
@@ -308,6 +307,7 @@
             background: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
             opacity: 0.05;
             z-index: 0;
+            animation: zoomInOut 20s ease infinite alternate;
         }
 
         .success-story p {
@@ -628,6 +628,61 @@
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
         }
+        
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
+            z-index: 1000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.6);
+            animation: none;
+        }
+        
+        .whatsapp-float i {
+            font-size: 36px;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+        
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(44, 62, 80, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+        }
 
         /* Animations for scroll */
         @keyframes fadeInUp {
@@ -663,31 +718,6 @@
             }
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Mobile menu button */
-        .mobile-menu-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(44, 62, 80, 0.8);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            border: none;
-        }
-
         /* Responsive adjustments */
         @media (max-width: 768px) {
             :root {
@@ -720,6 +750,18 @@
             .mobile-menu-btn {
                 display: flex;
             }
+            
+            /* WhatsApp button adjustments for mobile */
+            .whatsapp-float {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+            }
+            
+            .whatsapp-float i {
+                font-size: 32px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -743,11 +785,26 @@
             .stat-box {
                 padding: 1.2rem;
             }
+            
+            /* WhatsApp button adjustments for small screens */
+            .whatsapp-float {
+                bottom: 15px;
+                right: 15px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            .whatsapp-float i {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Mobile menu button -->
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp-float" id="whatsappButton">
+        <i class="fab fa-whatsapp"></i>
+    </div>
 
     <!-- Header -->
     <header>
@@ -760,19 +817,17 @@
         </div>
     </header>
 
-    <!-- Stats Section -->
+    <!-- Stats Section (Staff count removed) -->
     <section class="stats-section">
         <div class="container">
             <div class="stats-container">
+                <!-- Operating Hours Box -->
                 <div class="stat-box">
-                                    <div class="stat-box">
-                    <h3>Total Staff</h3>
-                    <div class="stat-number" id="staff-count"></div>
-                    <p class="stat-description">Qualified educators dedicated to your success</p>
-                </div>
                     <h3>Operating Hours</h3>
                     <div class="stat-number" id="timing"></div>
                 </div>
+                
+                <!-- Success Rate Box -->
                 <div class="stat-box">
                     <h3>Success Rate</h3>
                     <div class="stat-number">98%</div>
@@ -812,7 +867,7 @@ Join us, and experience the academy where wisdom truly reigns.</p>
                 <img src="https://via.placeholder.com/200" alt="Management Head">
                 <div class="profile-content">
                     <h3>Mr. Muhammad Nadeem</h3>
-                    <p><strong>Qualification:</strong> M.Phil in Education Management</p>
+                    <p><strong>Qualification:</strong> MBA Finance</p>
                     <p><strong>Message:</strong> "At DYNAS, we are committed to nurturing potential and guiding our students towards a brighter future. Together, we can achieve excellence."</p>
                 </div>
             </div>
@@ -942,7 +997,7 @@ Welcome to Dynas.
                 if (!querySnapshot.empty) {
                     querySnapshot.forEach((doc) => {
                         const data = doc.data();
-                        document.getElementById("staff-count").innerText = data.count || "N/A";
+                        // Only update timing (staff count removed)
                         document.getElementById("timing").innerText = data.timing || "N/A";
                     });
                 } else {
@@ -958,6 +1013,13 @@ Welcome to Dynas.
 
     <!-- Scroll Animation Script -->
     <script>
+        // WhatsApp button functionality
+        document.getElementById('whatsappButton').addEventListener('click', function() {
+            // Format number for WhatsApp (remove spaces, dashes, etc.)
+            const phoneNumber = '923362119205'; // Pakistan country code + number without leading zero
+            window.open(`https://wa.me/${phoneNumber}`, '_blank');
+        });
+
         // Scroll to sections when clicking the scroll down button
         document.querySelector('.scroll-down').addEventListener('click', function() {
             document.querySelector('.stats-section').scrollIntoView({ 
@@ -1003,9 +1065,9 @@ Welcome to Dynas.
             handleScrollAnimations();
         });
 
-        // Animate stats counter
+        // Animate stats counter (success rate)
         function animateStats() {
-            const successRateElement = document.querySelector('.stat-box:nth-child(3) .stat-number');
+            const successRateElement = document.querySelector('.stat-box:nth-child(2) .stat-number');
             let count = 0;
             const target = 98;
             const duration = 2000; // 2 seconds
@@ -1036,7 +1098,7 @@ Welcome to Dynas.
             observer.observe(statsSection);
         }
 
-        // Mobile menu button (placeholder functionality)
+        // Mobile menu button functionality
         document.getElementById('menuBtn').addEventListener('click', function() {
             alert('Mobile menu would open here. Add your navigation items as needed.');
         });
