@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
     <style>
         :root {
             --primary: #2c3e50;
@@ -19,38 +21,52 @@
             --text: #333;
             --text-light: #7f8c8d;
             --shadow: 0 10px 20px rgba(0,0,0,0.1);
-            --transition: all 0.3s ease;
+            --transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--dark));
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             background-color: var(--light);
             font-family: 'Poppins', sans-serif;
             color: var(--text);
             line-height: 1.6;
+            overflow-x: hidden;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
-        /* Header Styles */
+
+        /* Header with animated gradient */
         header {
-            background: linear-gradient(135deg, var(--primary), var(--dark));
+            background: var(--gradient);
             color: white;
-            padding: 2rem 0;
+            padding: 4rem 0;
             text-align: center;
             position: relative;
             overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: gradientShift 15s ease infinite;
+            background-size: 200% 200%;
         }
-        
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         header::before {
             content: "";
             position: absolute;
@@ -61,274 +77,590 @@
             background: url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
             opacity: 0.2;
             z-index: 0;
+            animation: zoomInOut 20s ease infinite alternate;
         }
-        
+
+        @keyframes zoomInOut {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
         header .container {
             position: relative;
             z-index: 1;
+            transform: translateY(0);
+            opacity: 1;
+            transition: var(--transition);
         }
-        
+
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
+            font-size: 4.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            display: inline-block;
         }
-        
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
         h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 300;
             margin-bottom: 2rem;
             opacity: 0.9;
         }
-        
-        /* Stats Section */
-        .stats-section {
-            padding: 4rem 0;
-            background-color: white;
+
+        /* Scroll indicator */
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 10;
         }
-        
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+            40% { transform: translateY(-20px) translateX(-50%); }
+            60% { transform: translateY(-10px) translateX(-50%); }
+        }
+
+        /* Stats Section with animated counters */
+        .stats-section {
+            padding: 5rem 0;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: var(--gradient);
+        }
+
         .stats-container {
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             flex-wrap: wrap;
             gap: 2rem;
-            margin-top: 2rem;
+            margin-top: 3rem;
         }
-        
+
         .stat-box {
             background: white;
             border-radius: 15px;
-            box-shadow: var(--shadow);
-            padding: 2rem;
-            width: 280px;
+            padding: 2.5rem;
             text-align: center;
+            box-shadow: var(--shadow);
+            flex: 1;
+            min-width: 250px;
+            transform: translateY(50px);
+            opacity: 0;
             transition: var(--transition);
+            border-bottom: 4px solid var(--secondary);
         }
-        
-        .stat-box:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+
+        .stat-box.animated {
+            transform: translateY(0);
+            opacity: 1;
         }
-        
+
         .stat-box h3 {
+            font-size: 1.5rem;
             color: var(--primary);
-            font-size: 1.3rem;
             margin-bottom: 1rem;
         }
-        
+
         .stat-number {
             font-size: 3rem;
             font-weight: 700;
-            color: var(--secondary);
-            margin: 1rem 0;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            position: relative;
             display: inline-block;
         }
-        
+
+        .stat-number::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--secondary);
+        }
+
         .stat-description {
+            font-size: 1rem;
             color: var(--text-light);
-            font-size: 0.9rem;
         }
-        
-        /* Why Choose DYNAS */
-        .why-section {
-            padding: 5rem 0;
-            background-color: #f9f9f9;
+
+        /* Sections with scroll animations */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .section:nth-child(even) {
+            background: rgba(236, 240, 241, 0.5);
+        }
+
         .section-title {
             text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-        
-        .section-title h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-        
-        .section-title::after {
-            content: "";
-            display: block;
-            width: 80px;
-            height: 4px;
-            background: var(--secondary);
-            margin: 0 auto;
-            border-radius: 2px;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
+            margin-bottom: 4rem;
+            transform: translateY(30px);
+            opacity: 0;
             transition: var(--transition);
         }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
+
+        .section-title.animated {
+            transform: translateY(0);
+            opacity: 1;
         }
-        
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            margin-bottom: 1.5rem;
-        }
-        
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+
+        .section-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
             color: var(--primary);
+            position: relative;
+            display: inline-block;
         }
-        
-        /* Location Section */
-        .location-section {
-            padding: 5rem 0;
-            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), 
-                        url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
         }
-        
-        .location-container {
+
+        .success-story, .management-head, .ceo-message {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .success-story.animated, 
+        .management-head.animated, 
+        .ceo-message.animated {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .success-story {
+            border-left: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-story::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .success-story p {
+            position: relative;
+            z-index: 1;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .profile {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             gap: 3rem;
+            position: relative;
         }
-        
+
+        .profile img {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: var(--shadow);
+            border: 5px solid white;
+            outline: 2px solid var(--secondary);
+            transform: translateX(-50px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .profile.animated img {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .profile-content {
+            flex: 1;
+            min-width: 300px;
+            transform: translateX(50px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .profile.animated .profile-content {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .profile-content h3 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-content h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .profile-content p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .profile-content p strong {
+            color: var(--primary);
+        }
+
+        /* Why Choose Section */
+        .why-section {
+            padding: 6rem 0;
+            background: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover fixed;
+            position: relative;
+            color: white;
+            text-align: center;
+        }
+
+        .why-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 62, 80, 0.85);
+            z-index: 0;
+        }
+
+        .why-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .why-section .section-title h2 {
+            color: white;
+        }
+
+        .why-section .section-title h2::after {
+            background: var(--accent);
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2.5rem;
+            width: calc(33.333% - 2rem);
+            min-width: 300px;
+            text-align: center;
+            transition: var(--transition);
+            transform: translateY(50px);
+            opacity: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card.animated {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) !important;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Location Section */
+        .location-section {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .location-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            align-items: center;
+        }
+
         .location-info {
             flex: 1;
             min-width: 300px;
+            transform: translateX(-50px);
+            opacity: 0;
+            transition: var(--transition);
         }
-        
+
+        .location-info.animated {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
         .location-info h3 {
             font-size: 2rem;
             color: var(--primary);
             margin-bottom: 1.5rem;
+            position: relative;
         }
-        
+
+        .location-info h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+
         .location-info p {
             margin-bottom: 1.5rem;
             font-size: 1.1rem;
         }
-        
+
+        .location-info p strong {
+            color: var(--primary);
+        }
+
         .map-container {
             flex: 1;
             min-width: 300px;
             height: 400px;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
             box-shadow: var(--shadow);
+            transform: translateX(50px);
+            opacity: 0;
+            transition: var(--transition);
         }
-        
+
+        .map-container.animated {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
         .map-container iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
-        
-        /* Button Styles */
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 1.8rem;
-            background: var(--secondary);
-            color: white;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
-        
-        .btn:hover {
-            background: #2980b9;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-        }
-        
-        .btn-accent {
-            background: var(--accent);
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
-        }
-        
-        .btn-accent:hover {
-            background: #c0392b;
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
-        }
-        
+
         /* Footer */
         footer {
-            background: var(--dark);
+            background: var(--gradient);
             color: white;
             padding: 3rem 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent);
+        }
+
         .footer-content {
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 2rem;
         }
-        
+
         .footer-logo {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .footer-links {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .footer-links a {
+            font-size: 3rem;
+            font-weight: 700;
             color: white;
+            position: relative;
+        }
+
+        .footer-logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
             text-decoration: none;
             transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
-        
-        .footer-links a:hover {
-            color: var(--secondary);
-        }
-        
-        .social-icons {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .social-icons a {
+
+        .btn-accent {
+            background: var(--accent);
             color: white;
-            font-size: 1.5rem;
-            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
         }
-        
-        .social-icons a:hover {
-            color: var(--secondary);
+
+        .btn-accent:hover {
+            background: #c0392b;
             transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
         }
-        
-        .copyright {
-            opacity: 0.8;
-            font-size: 0.9rem;
+
+        /* Animations for scroll */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
-        /* Responsive Adjustments */
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .feature-card {
+                width: calc(50% - 2rem);
+            }
+        }
+
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
             
             h2 {
@@ -336,24 +668,62 @@
             }
             
             .section-title h2 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+            
+            .profile {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile img {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .profile-content h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .feature-card {
+                width: 100%;
+            }
+            
+            .location-info, .map-container {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section {
+                padding: 4rem 0;
             }
             
             .stat-box {
-                width: 100%;
-                max-width: 300px;
+                min-width: 100%;
             }
         }
     </style>
 </head>
 <body>
+
+    <!-- Header -->
     <header>
         <div class="container">
-            <h1>DYNAS</h1>
-            <h2>Where Wisdom Reigns</h2>
+            <h1 class="animate__animated animate__fadeInDown">DYNAS</h1>
+            <h2 class="animate__animated animate__fadeIn animate__delay-1s">Where Wisdom Reigns</h2>
+            <div class="scroll-down animate__animated animate__fadeIn animate__delay-2s animate__infinite">
+                <i class="fas fa-chevron-down"></i>
+            </div>
         </div>
     </header>
-    
+
+    <!-- Stats Section -->
     <section class="stats-section">
         <div class="container">
             <div class="stats-container">
@@ -362,12 +732,10 @@
                     <div class="stat-number" id="staff-count"></div>
                     <p class="stat-description">Qualified educators dedicated to your success</p>
                 </div>
-                
                 <div class="stat-box">
                     <h3>Operating Hours</h3>
                     <div class="stat-number" id="timing"></div>
                 </div>
-                
                 <div class="stat-box">
                     <h3>Success Rate</h3>
                     <div class="stat-number">98%</div>
@@ -376,80 +744,135 @@
             </div>
         </div>
     </section>
-    
+
+    <!-- Success Story -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Success Story</h2>
+            </div>
+            <div class="success-story">
+                <p>Dynas Academy was born from a simple yet powerful dream: to create a fair, respectful, and inspiring learning space for all students. Founded by a passionate medical student who witnessed the flaws in our education system—favoritism, harsh treatment, and lack of empathy—Dynas was designed to be different.
+
+What began with a single classroom, a whiteboard, and a heart full of hope, has now evolved into a dedicated institution that supports students in Classes 9th to 12th with top-quality education and personalized guidance.
+
+At Dynas, we don’t just teach. We listen. We care. We believe that every child deserves to be heard, guided, and respected. Our teachers are trained not just to teach subjects but to build confidence, responsibility, and discipline—without ever resorting to fear or favoritism.
+
+Our promise is simple: no child should feel like “just another student.” At Dynas, they are family.
+
+Join us, and experience the academy where wisdom truly reigns.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Management Head Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Management Head</h2>
+            </div>
+            <div class="management-head profile">
+                <img src="https://via.placeholder.com/200" alt="Management Head">
+                <div class="profile-content">
+                    <h3>Mr. Muhammad Nadeem</h3>
+                    <p><strong>Qualification:</strong> M.Phil in Education Management</p>
+                    <p><strong>Message:</strong> "At DYNAS, we are committed to nurturing potential and guiding our students towards a brighter future. Together, we can achieve excellence."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CEO Message Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>CEO Message</h2>
+            </div>
+            <div class="ceo-message profile">
+                <img src="https://via.placeholder.com/200" alt="CEO">
+                <div class="profile-content">
+                    <h3>DR. Arooj Nadeem</h3>
+                    <p><strong>Qualification:</strong> MBBS Student-And a dreamer</p>
+                    <p><strong>Message:</strong> "
+
+When I started Dynas Academy, I didn’t just want to open another coaching center.
+I wanted to fix what’s broken in our education system.
+
+Too many students are judged by the money they pay or the marks they score. I’ve seen it happen—and I’ve felt how unfair it is. At Dynas, we do things differently. Every student here matters. Every voice is heard. Every question is respected.
+
+We teach with kindness, not pressure.
+We build with discipline, not fear.
+And above all, we believe that wisdom must rule—not just in books, but in hearts.
+
+Dynas isn’t just an academy. It’s a movement.
+And this is only the beginning.
+
+Welcome to a new kind of classroom.
+Welcome to Dynas.
+
+"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Section -->
     <section class="why-section">
         <div class="container">
             <div class="section-title">
                 <h2>Why Choose DYNAS?</h2>
                 <p>Discover what makes us the premier choice for education</p>
             </div>
-            
             <div class="features">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-graduation-cap"></i></div>
                     <h3>Expert Faculty</h3>
                     <p>Our team consists of highly qualified educators with years of experience in their respective fields, ensuring you receive top-tier instruction.</p>
                 </div>
-                
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-book-open"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-book-open"></i></div>
                     <h3>Comprehensive Curriculum</h3>
                     <p>We offer a well-structured curriculum that covers all essential topics while adapting to individual learning needs and pace.</p>
                 </div>
-                
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
                     <h3>Personalized Attention</h3>
                     <p>Small class sizes and individualized learning plans ensure each student receives the attention they need to succeed.</p>
                 </div>
-                
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-laptop"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-laptop"></i></div>
                     <h3>Modern Facilities</h3>
                     <p>State-of-the-art classrooms and learning resources create an optimal environment for education and growth.</p>
                 </div>
-                
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-hand-holding-heart"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-hand-holding-heart"></i></div>
                     <h3>Supportive Community</h3>
                     <p>Join a network of motivated learners and supportive educators committed to your academic journey.</p>
                 </div>
             </div>
         </div>
     </section>
-    
+
+    <!-- Location Section -->
     <section class="location-section">
         <div class="container">
             <div class="location-container">
                 <div class="location-info">
                     <h3>Our Location</h3>
                     <p>Visit us at our centrally located campus, designed to provide the perfect learning environment with easy access from all parts of the city.</p>
-                    <p><strong>Address:</strong> </p>
-                    <p><strong>Phone:</strong> 
-                    +92 336 2119205</p>
+                    <p><strong>Address:</strong> House NO.9-11 ST NO.12, SHALIMAR TOWN LHR</p>
+                    <p><strong>Phone:</strong> +92 336 2119205</p>
                     <p><strong>Email:</strong> dynascontrol12@gmail.com</p>
-                    <a href="https://maps.google.com" class="btn btn-accent" target="_blank">
-                        <i class="fas fa-map-marker-alt"></i> Go to Google Maps
-                    </a>
+                    <a href="https://maps.google.com" class="btn btn-accent" target="_blank"><i class="fas fa-map-marker-alt"></i> Go to Google Maps</a>
                 </div>
-                
                 <div class="map-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215256027566!2d-73.9878446845938!3d40.74844047932799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ0JzU0LjQiTiA3M8KwNTknMTkuNyJX!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?..." allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
     </section>
-    
+
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -458,45 +881,124 @@
             </div>
         </div>
     </footer>
+
+    <!-- Firebase Script (unchanged) -->
     <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    getDocs
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCUZzR0QhKFu3Ne3yTJU2RPX_RZaYPsNns",
-    authDomain: "dynas-final.firebaseapp.com",
-    projectId: "dynas-final",
-    storageBucket: "dynas-final.firebasestorage.app",
-    messagingSenderId: "448429408169",
-    appId: "1:448429408169:web:9237f956dfedacea3dceb8"
-  };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCUZzR0QhKFu3Ne3yTJU2RPX_RZaYPsNns",
+            authDomain: "dynas-final.firebaseapp.com",
+            projectId: "dynas-final",
+            storageBucket: "dynas-final.appspot.com",
+            messagingSenderId: "448429408169",
+            appId: "1:448429408169:web:9237f956dfedacea3dceb8"
+        };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-  async function loadSettings() {
-    try {
-      const querySnapshot = await getDocs(collection(db, "settings"));
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          document.getElementById("staff-count").innerText = data.count || "N/A";
-          document.getElementById("timing").innerText = data.timing || "N/A";
+        async function loadSettings() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "settings"));
+                if (!querySnapshot.empty) {
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        document.getElementById("staff-count").innerText = data.count || "N/A";
+                        document.getElementById("timing").innerText = data.timing || "N/A";
+                    });
+                } else {
+                    console.log("No settings document found.");
+                }
+            } catch (error) {
+                console.error("Error getting settings:", error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSettings);
+    </script>
+
+    <!-- Scroll Animation Script -->
+    <script>
+        // Scroll to sections when clicking the scroll down button
+        document.querySelector('.scroll-down').addEventListener('click', function() {
+            document.querySelector('.stats-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
         });
-      } else {
-        console.log("No settings document found.");
-      }
-    } catch (error) {
-      console.error("Error getting settings:", error);
-    }
-  }
 
-  document.addEventListener('DOMContentLoaded', loadSettings);
-</script>
+        // Function to check if element is in viewport
+        function isInViewport(element) {
+            const rect = element.getBoundingClientRect();
+            return (
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.75 &&
+                rect.bottom >= 0
+            );
+        }
+
+        // Function to handle scroll animations
+        function handleScrollAnimations() {
+            const animatedElements = [
+                ...document.querySelectorAll('.section-title'),
+                ...document.querySelectorAll('.stat-box'),
+                ...document.querySelectorAll('.success-story'),
+                ...document.querySelectorAll('.profile'),
+                ...document.querySelectorAll('.feature-card'),
+                ...document.querySelectorAll('.location-info'),
+                ...document.querySelectorAll('.map-container')
+            ];
+
+            animatedElements.forEach(element => {
+                if (isInViewport(element)) {
+                    element.classList.add('animated');
+                }
+            });
+        }
+
+        // Initialize animations on load
+        document.addEventListener('DOMContentLoaded', function() {
+            handleScrollAnimations();
+        });
+
+        // Add scroll event listener
+        window.addEventListener('scroll', function() {
+            handleScrollAnimations();
+        });
+
+        // Animate stats counter
+        function animateStats() {
+            const successRateElement = document.querySelector('.stat-box:nth-child(3) .stat-number');
+            let count = 0;
+            const target = 98;
+            const duration = 2000; // 2 seconds
+            const increment = target / (duration / 16); // Roughly 60fps
+
+            const timer = setInterval(() => {
+                count += increment;
+                if (count >= target) {
+                    count = target;
+                    clearInterval(timer);
+                }
+                successRateElement.textContent = Math.floor(count) + '%';
+            }, 16);
+        }
+
+        // Start counter animation when stats section is in view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    </script>
 
 </body>
 </html>
